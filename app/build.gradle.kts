@@ -58,6 +58,7 @@ dependencies {
 
     // Dagger Hilt
     implementation(libs.dagger.hilt.android)
+    testImplementation(libs.junit.junit)
     kapt(libs.dagger.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -68,4 +69,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Mockito
+    testImplementation(libs.org.mockito)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

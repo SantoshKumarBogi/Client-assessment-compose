@@ -11,6 +11,9 @@ composeBom = "2024.09.00"
 retrfot = "2.11.0"
 daggerHilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
+junitJunit = "4.12"
+coroutines = "1.7.0"
+mockito = "4.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +35,9 @@ squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+org-mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
