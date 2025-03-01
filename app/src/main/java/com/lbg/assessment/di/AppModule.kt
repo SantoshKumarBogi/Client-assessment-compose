@@ -2,6 +2,8 @@ package com.lbg.assessment.di
 
 import com.lbg.assessment.data.ApiConstants.BASE_URL
 import com.lbg.assessment.data.UserApiService
+import com.lbg.assessment.data.UserRepositoryImpl
+import com.lbg.assessment.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +27,10 @@ object AppModule {
     @Singleton
     fun providesApiService(retrofit: Retrofit): UserApiService =
         retrofit.create(UserApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun providesUserRepository(userApiService: UserApiService): UserRepository =
+        UserRepositoryImpl(userApiService)
 
 }
