@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lbg.assessment.domain.model.User
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
+import com.lbg.domain.model.User
 
 @Composable
 fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {

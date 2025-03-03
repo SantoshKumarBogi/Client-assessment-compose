@@ -2,8 +2,8 @@ package com.lbg.assessment.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lbg.assessment.domain.model.User
-import com.lbg.assessment.domain.repository.UserRepository
+import com.lbg.domain.model.User
+import com.lbg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
