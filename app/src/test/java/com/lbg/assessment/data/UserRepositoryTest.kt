@@ -28,14 +28,20 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun fetchUsers_success_returnsListOfUsers() = runBlocking {
+    fun fetchUsers_success_returnsListOfUsers_checkValidDataTypes() = runBlocking {
         // Arrange
         val mockUsers = listOf(User(1, "Santosh", "santosh@gmail.com", "1234567890"))
         // Act
         Mockito.`when`(userApiService.getUsers()).thenReturn(mockUsers)
         val result = SUT.fetchUsers()
-        // Assert
+        // Assert: check data types for all users
         assertEquals(mockUsers, result)
+        result.forEach { user ->
+            assertEquals(user.id::class.java, Int::class.java)
+            assertEquals(user.name::class.java, String::class.java)
+            assertEquals(user.email::class.java, String::class.java)
+            assertEquals(user.phone::class.java, String::class.java)
+        }
     }
 
     @Test
@@ -63,11 +69,11 @@ class UserRepositoryTest {
         assertEquals(emptyList<User>(), result)
     }
 
-    // region helper methods
+// region helper methods
 
-    // end region helper methods
+// end region helper methods
 
-    // region helper classes
+// region helper classes
 
-    // endregion helper classes
+// endregion helper classes
 }
