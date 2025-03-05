@@ -4,6 +4,7 @@ import com.lbg.data.ApiConstants.BASE_URL
 import com.lbg.data.repository.UserRepositoryImpl
 import com.lbg.data.service.UserApiService
 import com.lbg.domain.repository.UserRepository
+import com.lbg.domain.usecase.GetUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,5 +33,10 @@ object AppModule {
     @Singleton
     fun providesUserRepository(userApiService: UserApiService): UserRepository =
         UserRepositoryImpl(userApiService)
+
+    @Provides
+    @Singleton
+    fun providesUserUseCase(userRepository: UserRepository): GetUserUseCase =
+        GetUserUseCase(userRepository)
 
 }

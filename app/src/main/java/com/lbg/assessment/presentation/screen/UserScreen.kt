@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +25,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lbg.assessment.presentation.intent.UserIntent
+import com.lbg.assessment.presentation.state.UserState
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
 import com.lbg.domain.model.User
 
 @Composable
 fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
 
-    val users = viewModel.users.collectAsState()
-    val isLoading = viewModel.isLoading.collectAsState()
-    val error = viewModel.errorMessage.collectAsState()
+    val state = viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.userIntent.send(UserIntent.FetchUsers)
+    }
 
     Scaffold(topBar = {
         AppBar(title = "Users List")
@@ -43,22 +48,33 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
                 .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
-            when {
-                isLoading.value -> CircularProgressIndicator()
-                error.value != null -> Text(text = "Error: ${error.value}")
-                users.value.isNotEmpty() ->
-                    LazyColumn {
-                        items(users.value.size) { index ->
-                            UserItem(users.value[index])
-                        }
-                    }
+            when (state.value) {
+                UserState.Loading -> CircularProgressIndicator()
+                is UserState.Error -> {
+                    @Suppress("CAST_NEVER_SUCCEEDS")
+                    Text(text = "Error: ${(state.value as UserState.Error).error}")
+                }
 
-                else -> Text(
-                    text = "No users found",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center)
-                )
+                is UserState.Success -> {
+                    @Suppress("CAST_NEVER_SUCCEEDS")
+                    val users = (state.value as UserState.Success).users
+                    if (users.isNotEmpty()) {
+                        LazyColumn {
+                            items(users.size) { index ->
+                                UserItem(users[index])
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "No users found",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
+
+                else -> {}
             }
         }
     }
