@@ -1,6 +1,6 @@
-package com.lbg.di
+package com.lbg.data.di
 
-import com.lbg.data.ApiConstants.BASE_URL
+import com.lbg.core.ApiConstants.BASE_URL
 import com.lbg.data.repository.UserRepositoryImpl
 import com.lbg.data.service.UserApiService
 import com.lbg.domain.repository.UserRepository
@@ -14,8 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
-
+object DataModule {
     @Provides
     @Singleton
     fun providesRetrofit(): Retrofit =
@@ -32,5 +31,4 @@ object AppModule {
     @Singleton
     fun providesUserRepository(userApiService: UserApiService): UserRepository =
         UserRepositoryImpl(userApiService)
-
 }

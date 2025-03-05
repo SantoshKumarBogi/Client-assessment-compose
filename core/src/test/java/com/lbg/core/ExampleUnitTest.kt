@@ -1,4 +1,4 @@
-package com.lbg.data
+package com.lbg.core
 
 import org.junit.Test
 

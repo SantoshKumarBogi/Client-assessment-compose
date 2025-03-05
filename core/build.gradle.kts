@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lbg.di"
+    namespace = "com.lbg.core"
     compileSdk = 35
 
     defaultConfig {
@@ -34,17 +34,6 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":domain"))
-    implementation(project(":data"))
-
-    // Retrofit
-    implementation(libs.squareup.retrofit2.retrofit)
-    implementation(libs.squareup.retrofit2.converter.gson)
-
-    // Dagger Hilt
-    implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

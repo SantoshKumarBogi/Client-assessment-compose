@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Client-assessment-compose"
 include(":app")
-include(":di")
-include(":domain")
+include(":core")
 include(":data")
+include(":domain")
+

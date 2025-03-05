@@ -20,10 +20,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lbg.assessment.R
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
 import com.lbg.domain.model.User
 
@@ -35,7 +37,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
     val error = viewModel.errorMessage.collectAsState()
 
     Scaffold(topBar = {
-        AppBar(title = "Users List")
+        AppBar(title = stringResource(R.string.users_list))
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -45,7 +47,10 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
         ) {
             when {
                 isLoading.value -> CircularProgressIndicator()
-                error.value != null -> Text(text = "Error: ${error.value}")
+                error.value != null -> Text(text = error.value.let { error ->
+                    error + stringResource(R.string.error)
+                })
+
                 users.value.isNotEmpty() ->
                     LazyColumn {
                         items(users.value.size) { index ->
@@ -54,7 +59,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
                     }
 
                 else -> Text(
-                    text = "No users found",
+                    text = stringResource(R.string.no_users_found),
                     modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)

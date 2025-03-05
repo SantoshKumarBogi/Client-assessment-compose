@@ -1,4 +1,4 @@
-package com.lbg.data
+package com.lbg.core
 
 object ApiConstants {
     const val BASE_URL = "https://jsonplaceholder.typicode.com/"
