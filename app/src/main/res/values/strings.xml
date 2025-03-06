@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">User List</string>
     <string name="users_list">Users List</string>
-    <string name="error">Error: %1$s</string>
     <string name="no_users_found">No users found</string>
 </resources>
