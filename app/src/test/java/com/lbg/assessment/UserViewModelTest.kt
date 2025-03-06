@@ -4,6 +4,8 @@ import app.cash.turbine.test
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
 import com.lbg.domain.model.User
 import com.lbg.domain.usecase.GetUserUseCase
+import com.lbg.domain.utils.DomainException
+import com.lbg.domain.utils.ResultWrapper
 import com.lbg.util.TestCoroutineRule
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -12,6 +14,7 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +38,7 @@ class UserViewModelTest {
 
     @Before
     fun setUp() {
-        coEvery { getUserUseCase.invoke() } returns emptyList()
+        coEvery { getUserUseCase.invoke() } returns ResultWrapper.Success(emptyList())
         SUT = UserViewModel(getUserUseCase)
     }
 
@@ -46,7 +49,7 @@ class UserViewModelTest {
             User(1, "Santosh", "santosh@gmail.com", "1234567890"),
             User(2, "Varghese", "varghese@gmail.com", "9876543210")
         )
-        coEvery { getUserUseCase() } returns mockUsers
+        coEvery { getUserUseCase() } returns ResultWrapper.Success(mockUsers)
 
         // Act
         SUT = UserViewModel(getUserUseCase)
@@ -63,28 +66,34 @@ class UserViewModelTest {
     @Test
     fun fetchUser_failure_returnsError() = runBlocking {
         // Arrange
-        coEvery { getUserUseCase() } throws RuntimeException("Network error")
+        coEvery { getUserUseCase() } returns ResultWrapper.Error(DomainException.ServerError)
+
         // Act
         SUT = UserViewModel(getUserUseCase)
+
         // Assert
         SUT.errorMessage.test {
-            assertEquals("Network error", awaitItem())
+            assertEquals(DomainException.ServerError.message, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun fetchUser_loading_returnsLoading() = runBlocking {
+    fun fetchUser_loading_returnsLoading() = runTest {
         // Arrange
-        coEvery { getUserUseCase.invoke() } coAnswers {
+        val mockUsers = listOf(
+            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
+            User(2, "Varghese", "varghese@gmail.com", "9876543210")
+        )
+        coEvery {
+            getUserUseCase()
+        } coAnswers {
             delay(100)
-            listOf(
-                User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-                User(2, "Varghese", "varghese@gmail.com", "9876543210")
-            )
+            ResultWrapper.Success(mockUsers)
         }
         // Act
         SUT = UserViewModel(getUserUseCase)
+
         // Assert
         SUT.isLoading.test {
             assertEquals(true, awaitItem())

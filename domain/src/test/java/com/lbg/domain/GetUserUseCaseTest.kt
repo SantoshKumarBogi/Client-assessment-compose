@@ -3,12 +3,18 @@ package com.lbg.domain
 import com.lbg.domain.model.User
 import com.lbg.domain.repository.UserRepository
 import com.lbg.domain.usecase.GetUserUseCase
+import com.lbg.domain.utils.DomainException
+import com.lbg.domain.utils.ResultWrapper
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.fail
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
+import retrofit2.HttpException
+import retrofit2.Response
 
 class GetUserUseCaseTest {
     // region constants
@@ -29,7 +35,7 @@ class GetUserUseCaseTest {
     }
 
     @Test
-    fun invoke_success_returnsListOfUsers_checkValidDataTypes() = runBlocking {
+    fun invoke_success_returnsListOfUsers_checkValidDataTypes() = runTest {
         // Arrange
         val mockUsers = listOf(
             User(1, "Santosh", "santosh@gmail.com", "1234567890"),
@@ -41,8 +47,8 @@ class GetUserUseCaseTest {
         val result = SUT()
 
         // Assert: check data types for all users
-        assertEquals(mockUsers, result)
-        result.forEach { user ->
+        assertEquals(ResultWrapper.Success(mockUsers), result)
+        (result as ResultWrapper.Success).value.forEach { user ->
             assertEquals(user.id::class.java, Int::class.java)
             assertEquals(user.name::class.java, String::class.java)
             assertEquals(user.email::class.java, String::class.java)
@@ -53,16 +59,20 @@ class GetUserUseCaseTest {
     @Test
     fun invoke_failure_throwsException() = runBlocking {
         // Arrange
-        val exception = RuntimeException("Network error")
-        // Act
+        val exception = HttpException(
+            Response.error<ResponseBody>(
+                500,
+                ResponseBody.create(MediaType.parse("plain/text"), "some content")
+            )
+        )
         Mockito.`when`(mockUserRepository.fetchUsers()).thenThrow(exception)
+
+        // Act
+        val result = SUT()
+
         // Assert
-        try {
-            SUT()
-            fail("Expected an exception but none was thrown")
-        } catch (e: Exception) {
-            assertEquals(exception.message, e.message)
-        }
+        assert(result is ResultWrapper.Error)
+        assertEquals(DomainException.ServerError, (result as ResultWrapper.Error).exception)
     }
 
     @Test
@@ -72,7 +82,7 @@ class GetUserUseCaseTest {
         // Act
         val result = SUT()
         // Assert
-        assertEquals(emptyList<User>(), result)
+        assertEquals(emptyList<User>(), (result as ResultWrapper.Success).value)
     }
 
 // region helper methods

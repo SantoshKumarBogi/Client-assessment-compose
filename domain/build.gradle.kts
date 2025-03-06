@@ -57,5 +57,6 @@ dependencies {
     // Mockito
     testImplementation(libs.org.mockito)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.io.mockk)
     testImplementation(kotlin("test"))
 }
