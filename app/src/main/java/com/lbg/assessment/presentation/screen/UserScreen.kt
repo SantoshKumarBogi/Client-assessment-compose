@@ -47,9 +47,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
         ) {
             when {
                 isLoading.value -> CircularProgressIndicator()
-                error.value != null -> Text(text = error.value.let { error ->
-                    error + stringResource(R.string.error)
-                })
+                error.value != null -> Text(text = error.value!!)
 
                 users.value.isNotEmpty() ->
                     LazyColumn {
@@ -59,10 +57,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
                     }
 
                 else -> Text(
-                    text = stringResource(R.string.no_users_found),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center)
+                    text = stringResource(R.string.no_users_found)
                 )
             }
         }

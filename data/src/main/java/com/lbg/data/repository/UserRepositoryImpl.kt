@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userApiService: UserApiService) :
     UserRepository {
-    override suspend fun fetchUsers(): List<User> {
-        return userApiService.getUsers()
-    }
+    override suspend fun fetchUsers(): List<User> = userApiService.getUsers()
+
+    // To simulate server error
+    // throw HttpException(Response.error<ResponseBody>(500 ,ResponseBody.create(MediaType.parse("plain/text"),"some content")))
 }

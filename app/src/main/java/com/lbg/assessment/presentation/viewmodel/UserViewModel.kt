@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lbg.domain.model.User
 import com.lbg.domain.usecase.GetUserUseCase
+import com.lbg.domain.utils.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,16 +29,12 @@ class UserViewModel @Inject constructor(private val getUserUseCase: GetUserUseCa
 
     private fun fetchUsers() {
         viewModelScope.launch {
-            try {
-                _isLoading.value = true
-                _users.value = getUserUseCase()
-                _error.value = null
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
+            _isLoading.value = true
+            when (val result = getUserUseCase()) {
+                is ResultWrapper.Success -> _users.value = result.value
+                is ResultWrapper.Error -> _error.value = result.exception.message
             }
+            _isLoading.value = false
         }
     }
 }
