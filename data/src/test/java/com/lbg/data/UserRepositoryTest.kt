@@ -10,6 +10,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 
+/**
+ * Unit tests for [UserRepositoryImpl].
+ */
 class UserRepositoryTest {
 
     // region constants

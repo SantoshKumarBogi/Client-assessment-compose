@@ -2,10 +2,10 @@ package com.lbg.assessment
 
 import app.cash.turbine.test
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
+import com.lbg.core.utils.DomainException
+import com.lbg.core.utils.ResultWrapper
 import com.lbg.domain.model.User
 import com.lbg.domain.usecase.GetUserUseCase
-import com.lbg.domain.utils.DomainException
-import com.lbg.domain.utils.ResultWrapper
 import com.lbg.util.TestCoroutineRule
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,6 +19,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+/**
+ * Unit test for [UserViewModel]
+ */
 @ExperimentalCoroutinesApi
 class UserViewModelTest {
 
@@ -33,6 +36,7 @@ class UserViewModelTest {
 
     private lateinit var SUT: UserViewModel
 
+    // test rule
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
