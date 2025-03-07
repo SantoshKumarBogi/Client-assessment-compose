@@ -1,7 +1,10 @@
-package com.lbg.domain.utils
+package com.lbg.core.utils
 
 import com.lbg.core.ApiConstants
 
+/**
+ * Sealed class representing domain exceptions.
+ */
 sealed class DomainException(message: String) : Exception(message) {
     object NetworkError : DomainException(ApiConstants.NETWORK_ERROR) {
         private fun readResolve(): Any = NetworkError

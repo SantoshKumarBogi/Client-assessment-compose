@@ -2,15 +2,18 @@ package com.lbg.assessment.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lbg.core.utils.ResultWrapper
 import com.lbg.domain.model.User
 import com.lbg.domain.usecase.GetUserUseCase
-import com.lbg.domain.utils.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel class for the User Screen. Communicates to use case to fetch users.
+ */
 @HiltViewModel
 class UserViewModel @Inject constructor(private val getUserUseCase: GetUserUseCase) : ViewModel() {
 
@@ -27,6 +30,9 @@ class UserViewModel @Inject constructor(private val getUserUseCase: GetUserUseCa
         fetchUsers()
     }
 
+    /**
+     * Fetch users from the use case and update the UI state accordingly.
+     */
     private fun fetchUsers() {
         viewModelScope.launch {
             _isLoading.value = true

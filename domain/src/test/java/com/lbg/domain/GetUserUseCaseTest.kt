@@ -3,8 +3,8 @@ package com.lbg.domain
 import com.lbg.domain.model.User
 import com.lbg.domain.repository.UserRepository
 import com.lbg.domain.usecase.GetUserUseCase
-import com.lbg.domain.utils.DomainException
-import com.lbg.domain.utils.ResultWrapper
+import com.lbg.core.utils.DomainException
+import com.lbg.core.utils.ResultWrapper
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest

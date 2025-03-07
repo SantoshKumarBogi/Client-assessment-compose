@@ -35,6 +35,10 @@ android {
 
 dependencies {
 
+    // Retrofit
+    implementation(libs.squareup.retrofit2.retrofit)
+    implementation(libs.squareup.retrofit2.converter.gson)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

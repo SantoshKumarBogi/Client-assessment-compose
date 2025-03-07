@@ -64,7 +64,9 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
     }
 }
 
-
+/**
+ * User List item compose to show the user details(name, email, phone)
+ */
 @Composable
 fun UserItem(user: User) {
     Card(
