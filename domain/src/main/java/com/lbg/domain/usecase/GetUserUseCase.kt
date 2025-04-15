@@ -11,9 +11,9 @@ import javax.inject.Inject
  * success and failure cases and returns the result.
  */
 class GetUserUseCase @Inject constructor(private val userRepository: UserRepository) {
-    suspend operator fun invoke(): ResultWrapper<List<User>> {
+    suspend operator fun invoke(useLocal: Boolean): ResultWrapper<List<User>> {
         return try {
-            ResultWrapper.Success(userRepository.fetchUsers())
+            ResultWrapper.Success(userRepository.fetchUsers(useLocal))
         } catch (exception: Exception) {
             ResultWrapper.Error(mapExceptionToDomainException(exception))
         }

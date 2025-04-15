@@ -36,7 +36,7 @@ class UserViewModel @Inject constructor(private val getUserUseCase: GetUserUseCa
     private fun fetchUsers() {
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = getUserUseCase()) {
+            when (val result = getUserUseCase(true)) {
                 is ResultWrapper.Success -> _users.value = result.value
                 is ResultWrapper.Error -> _error.value = result.exception.message
             }
