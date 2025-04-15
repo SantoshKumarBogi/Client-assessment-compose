@@ -42,38 +42,63 @@ class UserViewModelTest {
 
     @Before
     fun setUp() {
-        coEvery { getUserUseCase.invoke() } returns ResultWrapper.Success(emptyList())
+        coEvery { getUserUseCase.invoke(true) } returns ResultWrapper.Success(emptyList())
         SUT = UserViewModel(getUserUseCase)
     }
 
     @Test
-    fun fetchUser_success_returnsListOfUsers() = runBlocking {
+    fun fetchUser_success_returnsListOfUsers_when_useLocal_is_true() = runBlocking {
         // Arrange
         val mockUsers = listOf(
             User(1, "Santosh", "santosh@gmail.com", "1234567890"),
             User(2, "Varghese", "varghese@gmail.com", "9876543210")
         )
-        coEvery { getUserUseCase() } returns ResultWrapper.Success(mockUsers)
+        coEvery { getUserUseCase(true) } returns ResultWrapper.Success(mockUsers)
 
         // Act
         SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(true)
 
         // Assert
         SUT.users.test {
             assertEquals(mockUsers, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-        coVerify { getUserUseCase() }
+        coVerify { getUserUseCase(true) }
 
     }
 
     @Test
-    fun fetchUser_failure_returnsError() = runBlocking {
+    fun fetchUser_success_returnsListOfUsers_when_useLocal_is_false() = runBlocking {
+        coEvery { getUserUseCase.invoke(false) } returns ResultWrapper.Success(emptyList())
         // Arrange
-        coEvery { getUserUseCase() } returns ResultWrapper.Error(DomainException.ServerError)
+        val mockUsers = listOf(
+            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
+            User(2, "Varghese", "varghese@gmail.com", "9876543210")
+        )
+        coEvery { getUserUseCase(false) } returns ResultWrapper.Success(mockUsers)
 
         // Act
         SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(false)
+
+        // Assert
+        SUT.users.test {
+            assertEquals(mockUsers, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+        coVerify { getUserUseCase(false) }
+
+    }
+
+    @Test
+    fun fetchUser_failure_returnsError_when_useLocal_is_true() = runBlocking {
+        // Arrange
+        coEvery { getUserUseCase(true) } returns ResultWrapper.Error(DomainException.ServerError)
+
+        // Act
+        SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(true)
 
         // Assert
         SUT.errorMessage.test {
@@ -83,20 +108,63 @@ class UserViewModelTest {
     }
 
     @Test
-    fun fetchUser_loading_returnsLoading() = runTest {
+    fun fetchUser_failure_returnsError_when_useLocal_is_false() = runBlocking {
+        // Arrange
+        coEvery { getUserUseCase(false) } returns ResultWrapper.Error(DomainException.ServerError)
+
+        // Act
+        SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(false)
+
+        // Assert
+        SUT.errorMessage.test {
+            assertEquals(DomainException.ServerError.message, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun fetchUser_loading_returnsLoading_when_useLocal_is_true() = runTest {
         // Arrange
         val mockUsers = listOf(
             User(1, "Santosh", "santosh@gmail.com", "1234567890"),
             User(2, "Varghese", "varghese@gmail.com", "9876543210")
         )
         coEvery {
-            getUserUseCase()
+            getUserUseCase(true)
         } coAnswers {
             delay(100)
             ResultWrapper.Success(mockUsers)
         }
         // Act
         SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(true)
+
+        // Assert
+        SUT.isLoading.test {
+            assertEquals(true, awaitItem())
+            assertEquals(false, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun fetchUser_loading_returnsLoading_when_useLocal_is_false() = runTest {
+        coEvery { getUserUseCase(false) } returns ResultWrapper.Success(emptyList())
+        // Arrange
+        val mockUsers = listOf(
+            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
+            User(2, "Varghese", "varghese@gmail.com", "9876543210")
+        )
+        coEvery {
+            getUserUseCase(false)
+        } coAnswers {
+            delay(100)
+            ResultWrapper.Success(mockUsers)
+        }
+        // Act
+        SUT = UserViewModel(getUserUseCase)
+        SUT.fetchUsers(false)
 
         // Assert
         SUT.isLoading.test {

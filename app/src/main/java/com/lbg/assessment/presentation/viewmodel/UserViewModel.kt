@@ -33,10 +33,10 @@ class UserViewModel @Inject constructor(private val getUserUseCase: GetUserUseCa
     /**
      * Fetch users from the use case and update the UI state accordingly.
      */
-    private fun fetchUsers() {
+    fun fetchUsers(useLocal: Boolean = true) {
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = getUserUseCase(true)) {
+            when (val result = getUserUseCase(useLocal)) {
                 is ResultWrapper.Success -> _users.value = result.value
                 is ResultWrapper.Error -> _error.value = result.exception.message
             }
