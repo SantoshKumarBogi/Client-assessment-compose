@@ -21,6 +21,55 @@ class GetUserUseCaseTest {
 
     // end region constants
 
+    private val mockUsers = listOf(
+        User(
+            1,
+            "Leanne Graham",
+            "Sincere@april.biz",
+            "1-770-736-8031 x56442",
+            "Bret",
+            User.Address(
+                "Kulas Light",
+                "Apt. 556",
+                "Gwenborough",
+                "92998-3874",
+                User.Location(
+                    "-37.3159",
+                    "81.1496"
+                )
+            ),
+            "hildegard.org",
+            User.Company(
+                "Romaguera-Crona",
+                "Multi-layered client-server neural-net",
+                "harness real-time e-markets"
+            )
+        ),
+        User(
+            2,
+            "Ervin Howell",
+            "Shanna@melissa.tv",
+            "010-692-6593 x09125",
+            "Antonette",
+            User.Address(
+                "Victor Plains",
+                "Suite 879",
+                "Wisokyburgh",
+                "90566-7771",
+                User.Location(
+                    "-43.9509",
+                    "-34.4618"
+                )
+            ),
+            "anastasia.net",
+            User.Company(
+                "Deckow-Crist",
+                "Proactive didactic contingency",
+                "synergize scalable supply-chains"
+            )
+        )
+    )
+
     // region helper fields
     private lateinit var mockUserRepository: UserRepository
 
@@ -37,10 +86,6 @@ class GetUserUseCaseTest {
     @Test
     fun invoke_success_returnsListOfUsers_checkValidDataTypes_when_useLocal_is_true() = runTest {
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         Mockito.`when`(mockUserRepository.fetchUsers(true)).thenReturn(mockUsers)
 
         // Act
@@ -59,10 +104,6 @@ class GetUserUseCaseTest {
     @Test
     fun invoke_success_returnsListOfUsers_checkValidDataTypes_when_useLocal_is_false() = runTest {
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         Mockito.`when`(mockUserRepository.fetchUsers(false)).thenReturn(mockUsers)
 
         // Act

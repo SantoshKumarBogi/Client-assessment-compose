@@ -14,6 +14,7 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -29,6 +30,55 @@ class UserViewModelTest {
 
     // end region constants
 
+    private val mockUsers = listOf(
+        User(
+            1,
+            "Leanne Graham",
+            "Sincere@april.biz",
+            "1-770-736-8031 x56442",
+            "Bret",
+            User.Address(
+                "Kulas Light",
+                "Apt. 556",
+                "Gwenborough",
+                "92998-3874",
+                User.Location(
+                    "-37.3159",
+                    "81.1496"
+                )
+            ),
+            "hildegard.org",
+            User.Company(
+                "Romaguera-Crona",
+                "Multi-layered client-server neural-net",
+                "harness real-time e-markets"
+            )
+        ),
+        User(
+            2,
+            "Ervin Howell",
+            "Shanna@melissa.tv",
+            "010-692-6593 x09125",
+            "Antonette",
+            User.Address(
+                "Victor Plains",
+                "Suite 879",
+                "Wisokyburgh",
+                "90566-7771",
+                User.Location(
+                    "-43.9509",
+                    "-34.4618"
+                )
+            ),
+            "anastasia.net",
+            User.Company(
+                "Deckow-Crist",
+                "Proactive didactic contingency",
+                "synergize scalable supply-chains"
+            )
+        )
+    )
+
     // region helper fields
     private var getUserUseCase: GetUserUseCase = mockk()
 
@@ -42,17 +92,13 @@ class UserViewModelTest {
 
     @Before
     fun setUp() {
-        coEvery { getUserUseCase.invoke(true) } returns ResultWrapper.Success(emptyList())
+        coEvery { getUserUseCase.invoke(false) } returns ResultWrapper.Success(emptyList())
         SUT = UserViewModel(getUserUseCase)
     }
 
     @Test
     fun fetchUser_success_returnsListOfUsers_when_useLocal_is_true() = runBlocking {
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         coEvery { getUserUseCase(true) } returns ResultWrapper.Success(mockUsers)
 
         // Act
@@ -72,10 +118,6 @@ class UserViewModelTest {
     fun fetchUser_success_returnsListOfUsers_when_useLocal_is_false() = runBlocking {
         coEvery { getUserUseCase.invoke(false) } returns ResultWrapper.Success(emptyList())
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         coEvery { getUserUseCase(false) } returns ResultWrapper.Success(mockUsers)
 
         // Act
@@ -125,11 +167,8 @@ class UserViewModelTest {
 
     @Test
     fun fetchUser_loading_returnsLoading_when_useLocal_is_true() = runTest {
+        coEvery { getUserUseCase(true) } returns ResultWrapper.Success(mockUsers)
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         coEvery {
             getUserUseCase(true)
         } coAnswers {
@@ -138,6 +177,7 @@ class UserViewModelTest {
         }
         // Act
         SUT = UserViewModel(getUserUseCase)
+
         SUT.fetchUsers(true)
 
         // Assert
@@ -150,12 +190,7 @@ class UserViewModelTest {
 
     @Test
     fun fetchUser_loading_returnsLoading_when_useLocal_is_false() = runTest {
-        coEvery { getUserUseCase(false) } returns ResultWrapper.Success(emptyList())
         // Arrange
-        val mockUsers = listOf(
-            User(1, "Santosh", "santosh@gmail.com", "1234567890"),
-            User(2, "Varghese", "varghese@gmail.com", "9876543210")
-        )
         coEvery {
             getUserUseCase(false)
         } coAnswers {

@@ -20,6 +20,55 @@ class UserRepositoryTest {
 
     // end region constants
 
+    private val mockUsers = listOf(
+        User(
+            1,
+            "Leanne Graham",
+            "Sincere@april.biz",
+            "1-770-736-8031 x56442",
+            "Bret",
+            User.Address(
+                "Kulas Light",
+                "Apt. 556",
+                "Gwenborough",
+                "92998-3874",
+                User.Location(
+                    "-37.3159",
+                    "81.1496"
+                )
+            ),
+            "hildegard.org",
+            User.Company(
+                "Romaguera-Crona",
+                "Multi-layered client-server neural-net",
+                "harness real-time e-markets"
+            )
+        ),
+        User(
+            2,
+            "Ervin Howell",
+            "Shanna@melissa.tv",
+            "010-692-6593 x09125",
+            "Antonette",
+            User.Address(
+                "Victor Plains",
+                "Suite 879",
+                "Wisokyburgh",
+                "90566-7771",
+                User.Location(
+                    "-43.9509",
+                    "-34.4618"
+                )
+            ),
+            "anastasia.net",
+            User.Company(
+                "Deckow-Crist",
+                "Proactive didactic contingency",
+                "synergize scalable supply-chains"
+            )
+        )
+    )
+
     // region helper fields
 
     // endregion helper fields
@@ -39,7 +88,6 @@ class UserRepositoryTest {
     fun fetchUsers_should_return_success_returnsListOfUsers_checkValidDataTypes_from_assetUserRepository_when_useLocal_is_true() =
         runBlocking {
             // Arrange
-            val mockUsers = listOf(User(1, "Santosh", "santosh@gmail.com", "1234567890"))
             // Act
             Mockito.`when`(assetUserRepository.getUsers()).thenReturn(mockUsers)
             val result = SUT.fetchUsers(true)
@@ -57,7 +105,6 @@ class UserRepositoryTest {
     fun fetchUsers_should_return_success_returnsListOfUsers_checkValidDataTypes_from_remoteUserRepository_when_useLocal_is_false() =
         runBlocking {
             // Arrange
-            val mockUsers = listOf(User(1, "Santosh", "santosh@gmail.com", "1234567890"))
             // Act
             Mockito.`when`(remoteUserRepository.fetchUsers()).thenReturn(mockUsers)
             val result = SUT.fetchUsers(false)
