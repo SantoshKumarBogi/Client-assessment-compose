@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,12 +26,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.lbg.assessment.R
 import com.lbg.assessment.presentation.viewmodel.UserViewModel
+import com.lbg.core.AppConstants
 import com.lbg.domain.model.User
+import kotlinx.coroutines.launch
 
 @Composable
-fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
+fun UserScreen(navController: NavController, viewModel: UserViewModel = hiltViewModel()) {
 
     val users = viewModel.users.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
@@ -52,7 +57,7 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
                 users.value.isNotEmpty() ->
                     LazyColumn {
                         items(users.value.size) { index ->
-                            UserItem(users.value[index])
+                            UserItem(users.value[index], navController, viewModel)
                         }
                     }
 
@@ -68,12 +73,19 @@ fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
  * User List item compose to show the user details(name, email, phone)
  */
 @Composable
-fun UserItem(user: User) {
+fun UserItem(user: User, navController: NavController, viewModel: UserViewModel) {
+    val coroutineScope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = {
+            coroutineScope.launch {
+                val userJson = viewModel.encodeUserObjectToJson(user)
+                navController.navigate("${AppConstants.USER_DETAILS_SCREEN}/${userJson}")
+            }
+        }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = user.name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
